@@ -9,7 +9,7 @@ if (Meteor.isClient) {
     }
 
     var credentialRequestCompleteCallback = Accounts.oauth.credentialRequestCompleteHandler(callback);
-    OneDrive.requestCredential(options, credentialRequestCompleteCallback);
+    OneDriveOAuth.requestCredential(options, credentialRequestCompleteCallback);
   };
 } else {
   Accounts.addAutopublishFields({

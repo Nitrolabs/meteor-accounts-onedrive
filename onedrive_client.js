@@ -1,11 +1,11 @@
-OneDrive = {};
+OneDriveOAuth = {};
 
 // Request OneDrive credentials for the user
 // @param options {optional}
 // @param credentialRequestCompleteCallback {Function} Callback function to call on
 //   completion. Takes one argument, credentialToken on success, or Error on
 //   error.
-OneDrive.requestCredential = function (options, credentialRequestCompleteCallback) {
+OneDriveOAuth.requestCredential = function (options, credentialRequestCompleteCallback) {
   // support both (options, callback) and (callback).
   if (!credentialRequestCompleteCallback && typeof options === 'function') {
     credentialRequestCompleteCallback = options;
@@ -30,7 +30,7 @@ OneDrive.requestCredential = function (options, credentialRequestCompleteCallbac
     '?client_id=' + config.clientId +
     '&scope=' + flatScope +
     '&response_type=code' +
-    '&redirect_uri=' + encodeURI(OAuth._redirectUri('onedrive', config)) +
+    '&redirect_uri=' + encodeURI(OAuth._redirectUri('onedrive', config)).replace('?close', '') +
     '&state=' + OAuth._stateParam(loginStyle, credentialToken);
   OAuth.launchLogin({
     loginService: "onedrive",

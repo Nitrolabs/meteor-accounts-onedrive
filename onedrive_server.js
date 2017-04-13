@@ -1,14 +1,13 @@
-OneDrive = {};
+OneDriveOAuth = {};
 
 OAuth.registerService('onedrive', 2, null, function(query) {
   var tokens = getTokens(query);
   var accessToken = tokens.access_token;
-  console.log(']]]]')
-  console.log(accessToken)
-  console.log(tokens)
-  console.log('---')
+  var refreshToken = tokens.refresh_token;
   var identity = getIdentity(accessToken);
-  var expiresAt = (new Date).getTime()/1000 + tokens.expires_in; 
+  var expiresAt = Date.now() + tokens.expires_in * 1000;
+
+  var getAvatar = id => `https://apis.live.net/v5.0/${id}/picture`
 
   return {
     serviceData: {
@@ -16,9 +15,15 @@ OAuth.registerService('onedrive', 2, null, function(query) {
       accessToken: OAuth.sealSecret(accessToken),
       email: identity.emails.preferred,
       username: identity.login,
-      expiresAt:expiresAt
+      expiresAt: expiresAt,
+      refreshToken: refreshToken,
+      picture: getAvatar(identity.id),
     },
-    options: {profile: {name: identity.name}}
+    options: {
+      profile: {name: identity.name,
+        avatar: getAvatar(identity.id)
+      }
+    }
   };
 });
 
@@ -43,7 +48,7 @@ var getTokens = function (query) {
           code: query.code,
           client_id: config.clientId,
           client_secret: OAuth.openSecret(config.secret),
-          redirect_uri: OAuth._redirectUri('onedrive', config),
+          redirect_uri: OAuth._redirectUri('onedrive', config).replace('?close', ''),
           grant_type:'authorization_code',
           state: query.state
         }
@@ -63,7 +68,7 @@ var getIdentity = function (accessToken) {
   try {
     var response = HTTP.get(
       "https://apis.live.net/v5.0/me", {
-        headers: {"User-Agent": userAgent}, 
+        headers: {"User-Agent": userAgent},
         params: {access_token: accessToken}
       });
     return response.data;
@@ -74,6 +79,6 @@ var getIdentity = function (accessToken) {
 };
 
 
-OneDrive.retrieveCredential = function(credentialToken, credentialSecret) {
+OneDriveOAuth.retrieveCredential = function(credentialToken, credentialSecret) {
   return OAuth.retrieveCredential(credentialToken, credentialSecret);
 };
