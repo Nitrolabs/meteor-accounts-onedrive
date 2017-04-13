@@ -1,12 +1,12 @@
 Package.describe({
   name: "nitrolabs:accounts-onedrive",
   summary: "OneDrive OAuth flow",
-  version: "1.0.0",
+  version: "1.0.1",
   git: "https://github.com/nitrolabs/meteor-accounts-onedrive.git"
 });
 
 Package.on_use(function(api) {
-  api.versionsFrom("1.0");
+  api.versionsFrom('1.0');
   api.use('oauth2', ['client', 'server']);
   api.use('oauth', ['client', 'server']);
   api.use('http', ['server']);
