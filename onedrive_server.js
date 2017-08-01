@@ -32,7 +32,9 @@ if (Meteor.release)
   userAgent += "/" + Meteor.release;
 
 var getTokens = function (query) {
-  var config = ServiceConfiguration.configurations.findOne({service: 'onedrive'});
+  var config = ServiceConfiguration.configurations.findOne({
+    service: Meteor.settings.onedrive.service || 'onedrive',
+  });
   if (!config)
     throw new ServiceConfiguration.ConfigError();
 

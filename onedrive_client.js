@@ -12,7 +12,9 @@ OneDriveOAuth.requestCredential = function (options, credentialRequestCompleteCa
     options = {};
   }
 
-  var config = ServiceConfiguration.configurations.findOne({service: 'onedrive'});
+  var config = ServiceConfiguration.configurations.findOne({
+    service: options.service || 'onedrive',
+  });
   if (!config) {
     credentialRequestCompleteCallback && credentialRequestCompleteCallback(
       new ServiceConfiguration.ConfigError());
